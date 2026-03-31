@@ -285,3 +285,6 @@ with data_tab:
         "built to showcase a DOI-backed smart contract vulnerability benchmark curated "
         "at the Department of Computer Science and Engineering, BVCOE, Delhi."
     )
+
+Cite as:
+M. Tiwari, “SARMF-Bench Explorer v1.0 – AI-Assisted Smart Contract Vulnerability Benchmarking System”. Zenodo, Mar. 31, 2026. doi: 10.5281/zenodo.19354672.
