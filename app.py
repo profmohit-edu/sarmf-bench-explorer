@@ -2,23 +2,46 @@ import streamlit as st
 import pandas as pd
 import random
 
-# Page configuration
-st.set_page_config(page_title="SARMF-Bench Explorer", layout="wide")
+# Page config
+st.set_page_config(
+    page_title="SARMF-Bench Explorer",
+    layout="wide"
+)
 
-# Title
-st.title("SARMF-Bench Explorer")
-st.subheader("Smart Contract Vulnerability Benchmarking System")
+# Custom styling (IMPORTANT)
+st.markdown("""
+<style>
+.main {
+    background-color: #f5f7fa;
+}
+h1 {
+    color: #1f4e79;
+}
+h2, h3 {
+    color: #2c3e50;
+}
+.block-container {
+    padding-top: 2rem;
+}
+</style>
+""", unsafe_allow_html=True)
 
-# Author + affiliation (PROFESSIONAL FORMAT)
-st.write("""
-**Developed by Mohit Tiwari**  
-Assistant Professor, Department of Computer Science  
+# HEADER
+st.markdown("""
+<h1>SARMF-Bench Explorer</h1>
+<h3>Smart Contract Vulnerability Benchmarking System</h3>
+""", unsafe_allow_html=True)
+
+# Author
+st.markdown("""
+<b>Developed by Mohit Tiwari</b><br>
+Assistant Professor, Department of Computer Science<br>
 Bharati Vidyapeeth's College of Engineering, New Delhi
-""")
+""", unsafe_allow_html=True)
 
-st.caption("An independent academic research system for smart contract vulnerability benchmarking by Mohit Tiwari,Dept of CSE,BVCOE Delhi.")
+st.markdown("---")
 
-# Generate dataset
+# DATA GENERATION
 contracts = []
 vulnerabilities = ["Reentrancy", "Overflow", "Access Control", "Timestamp", "DoS"]
 severities = ["Low", "Medium", "High"]
@@ -34,17 +57,17 @@ for i in range(100):
 
 df = pd.DataFrame(contracts)
 
-# Sidebar filters
-st.sidebar.header("Filters")
+# SIDEBAR
+st.sidebar.title("Filters")
 
 vuln = st.sidebar.multiselect(
-    "Vulnerability",
+    "Select Vulnerability",
     df["Vulnerability"].unique(),
     default=df["Vulnerability"].unique()
 )
 
 severity = st.sidebar.multiselect(
-    "Severity",
+    "Select Severity",
     df["Severity"].unique(),
     default=df["Severity"].unique()
 )
@@ -54,23 +77,38 @@ filtered_df = df[
     (df["Severity"].isin(severity))
 ]
 
-# Metrics
+# METRICS
+st.markdown("## 📊 Overview")
+
 col1, col2 = st.columns(2)
+
 col1.metric("Total Contracts", len(filtered_df))
 col2.metric("Unique Vulnerabilities", filtered_df["Vulnerability"].nunique())
 
-# Data table
+st.markdown("---")
+
+# TABLE
+st.markdown("## 📁 Contract Data")
+
 st.dataframe(filtered_df, use_container_width=True)
 
-# Charts
-st.subheader("Vulnerability Distribution")
-st.bar_chart(filtered_df["Vulnerability"].value_counts())
+st.markdown("---")
 
-st.subheader("Severity Distribution")
-st.bar_chart(filtered_df["Severity"].value_counts())
+# CHARTS
+col3, col4 = st.columns(2)
 
-# Contract inspection (KEY FEATURE)
-st.subheader("🔍 Contract Inspection")
+with col3:
+    st.markdown("### Vulnerability Distribution")
+    st.bar_chart(filtered_df["Vulnerability"].value_counts())
+
+with col4:
+    st.markdown("### Severity Distribution")
+    st.bar_chart(filtered_df["Severity"].value_counts())
+
+st.markdown("---")
+
+# INSPECTION SECTION
+st.markdown("## 🔍 Contract Inspection")
 
 selected_contract = st.selectbox(
     "Select Contract",
@@ -79,13 +117,14 @@ selected_contract = st.selectbox(
 
 contract_data = filtered_df[filtered_df["Contract"] == selected_contract]
 
-st.write("### Details")
-st.write(contract_data)
+st.markdown("### Details")
+st.dataframe(contract_data)
 
-st.write("### Interpretation")
+st.markdown("### Analysis")
 
 vuln_val = contract_data["Vulnerability"].values[0]
 severity_val = contract_data["Severity"].values[0]
 
-st.success(f"This contract shows {vuln_val} vulnerability with {severity_val} severity.")
-st.warning("Recommendation: Further manual audit required.")
+st.success(f"Detected: {vuln_val} vulnerability")
+st.warning(f"Severity Level: {severity_val}")
+st.info("Recommendation: Further manual audit required.")
