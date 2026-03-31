@@ -1,0 +1,11 @@
+Contract,Vulnerability,Severity,Tool
+C1,Reentrancy,High,Mythril
+C2,Overflow,Medium,Slither
+C3,Access Control,High,Oyente
+C4,DoS,Low,Mythril
+C5,Timestamp,Medium,Slither
+C6,Overflow,High,Mythril
+C7,Access Control,Low,Slither
+C8,Reentrancy,Medium,Oyente
+C9,DoS,Medium,Slither
+C10,Timestamp,Low,Oyente
