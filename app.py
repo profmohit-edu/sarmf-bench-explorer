@@ -7,56 +7,63 @@ st.set_page_config(
     layout="wide",
 )
 
-# -------------------- DATASET (CSV FIRST, THEN FALLBACK) --------------------
+# -------------------- LOAD DATA (CSV + FALLBACK) --------------------
 try:
     df = pd.read_csv("sarmf_dataset.csv")
 except:
-    data = [
+    df = pd.DataFrame([
         {"Contract": "C1", "Vulnerability": "Reentrancy", "Severity": "High", "Tool": "Mythril"},
         {"Contract": "C2", "Vulnerability": "Overflow", "Severity": "Medium", "Tool": "Slither"},
         {"Contract": "C3", "Vulnerability": "Access Control", "Severity": "High", "Tool": "Oyente"},
-        {"Contract": "C4", "Vulnerability": "DoS", "Severity": "Low", "Tool": "Mythril"},
-        {"Contract": "C5", "Vulnerability": "Timestamp", "Severity": "Medium", "Tool": "Slither"},
-    ]
-    df = pd.DataFrame(data)
+    ])
 
 # -------------------- HEADER --------------------
 st.title("SARMF-Bench Explorer")
-st.subheader("Interactive Smart Contract Vulnerability Benchmarking Portal")
+st.subheader("Smart Contract Vulnerability Benchmarking System")
 
-st.write(
-    "Explore smart contracts, vulnerability types, severities, and tool findings "
-    "using an interactive dashboard."
-)
-
-st.markdown(
-    """
-**Developed by:** Mohit Tiwari  
+st.write("""
+Developed by Mohit Tiwari  
 Assistant Professor, Department of Computer Science  
 Bharati Vidyapeeth's College of Engineering, New Delhi
-"""
-)
+""")
 
 st.markdown("---")
 
-# -------------------- SIDEBAR FILTERS --------------------
+# -------------------- SYSTEM PURPOSE --------------------
+st.markdown("### System Purpose")
+
+st.write("""
+SARMF-Bench Explorer is a prototype system designed to support benchmarking of 
+smart contract vulnerabilities across multiple analysis tools.
+
+The system enables structured comparison of vulnerability types, severity levels, 
+and tool outputs, providing a foundation for reproducible evaluation of 
+smart contract security mechanisms.
+
+This platform can be extended with large-scale datasets and integrated analysis 
+pipelines to support academic research and security validation workflows.
+""")
+
+st.markdown("---")
+
+# -------------------- FILTERS --------------------
 st.sidebar.title("Filters")
 
 vuln_filter = st.sidebar.multiselect(
-    "Vulnerability type",
-    options=sorted(df["Vulnerability"].unique()),
+    "Vulnerability",
+    sorted(df["Vulnerability"].unique()),
     default=sorted(df["Vulnerability"].unique()),
 )
 
 severity_filter = st.sidebar.multiselect(
-    "Severity level",
-    options=sorted(df["Severity"].unique()),
+    "Severity",
+    sorted(df["Severity"].unique()),
     default=sorted(df["Severity"].unique()),
 )
 
 tool_filter = st.sidebar.multiselect(
-    "Analysis tool",
-    options=sorted(df["Tool"].unique()),
+    "Tool",
+    sorted(df["Tool"].unique()),
     default=sorted(df["Tool"].unique()),
 )
 
@@ -66,96 +73,82 @@ filtered_df = df[
     & df["Tool"].isin(tool_filter)
 ]
 
-st.sidebar.caption("Filtering controls for vulnerability, severity, and tool.")
-
-# -------------------- OVERVIEW METRICS --------------------
+# -------------------- OVERVIEW --------------------
 st.subheader("Dataset Overview")
 
-m1, m2, m3 = st.columns(3)
-m1.metric("Total contracts", len(filtered_df))
-m2.metric("Unique vulnerabilities", filtered_df["Vulnerability"].nunique())
-m3.metric("Tools represented", filtered_df["Tool"].nunique())
+c1, c2, c3 = st.columns(3)
+c1.metric("Total Contracts", len(filtered_df))
+c2.metric("Unique Vulnerabilities", filtered_df["Vulnerability"].nunique())
+c3.metric("Tools", filtered_df["Tool"].nunique())
 
 st.markdown("---")
 
-# -------------------- DISTRIBUTION --------------------
-st.subheader("Distributions")
+# -------------------- TABLE --------------------
+st.subheader("Contract Data")
 
-c1, c2 = st.columns(2)
+if filtered_df.empty:
+    st.warning("No matching data")
+else:
+    st.dataframe(filtered_df, use_container_width=True)
 
-with c1:
-    st.write("Vulnerability distribution")
+st.markdown("---")
+
+# -------------------- ANALYSIS --------------------
+st.subheader("Analysis")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.write("Vulnerability Distribution")
     if not filtered_df.empty:
         st.bar_chart(filtered_df["Vulnerability"].value_counts())
-    else:
-        st.info("No data available.")
 
-with c2:
-    st.write("Severity distribution")
+with col2:
+    st.write("Severity Distribution")
     if not filtered_df.empty:
-        severity_order = ["Low", "Medium", "High"]
+        order = ["Low", "Medium", "High"]
         st.bar_chart(
             filtered_df["Severity"]
             .value_counts()
-            .reindex(severity_order)
+            .reindex(order)
             .fillna(0)
         )
-    else:
-        st.info("No data available.")
 
 st.markdown("---")
 
-# -------------------- TABLE + INSPECTION --------------------
-st.subheader("Contracts and Detailed Inspection")
+# -------------------- CONTRACT INSPECTION --------------------
+st.subheader("Contract Inspection")
 
-tcol, dcol = st.columns([2, 1])
+if filtered_df.empty:
+    st.info("No contracts available")
+    selected_contract = None
+else:
+    selected_contract = st.selectbox(
+        "Select Contract",
+        filtered_df["Contract"].unique()
+    )
 
-with tcol:
-    if filtered_df.empty:
-        st.warning("No matching contracts.")
-        selected_contract = None
-        contract_data = pd.DataFrame()
-    else:
-        st.dataframe(filtered_df, use_container_width=True)
+if selected_contract:
+    row = filtered_df[filtered_df["Contract"] == selected_contract].iloc[0]
 
-        selected_contract = st.selectbox(
-            "Select contract",
-            filtered_df["Contract"].unique(),
-        )
+    vuln_val = row["Vulnerability"]
+    severity_val = row["Severity"]
+    tool_val = row["Tool"]
 
-        contract_data = filtered_df[
-            filtered_df["Contract"] == selected_contract
-        ]
+    st.write(f"Contract: {row['Contract']}")
+    st.write(f"Vulnerability: {vuln_val}")
+    st.write(f"Severity: {severity_val}")
+    st.write(f"Tool: {tool_val}")
 
-with dcol:
-    if selected_contract is None or contract_data.empty:
-        st.info("Select a contract to view details.")
-        vuln_val = None
-        severity_val = None
-        tool_val = None
-    else:
-        row = contract_data.iloc[0]
-        vuln_val = row["Vulnerability"]
-        severity_val = row["Severity"]
-        tool_val = row["Tool"]
-
-        st.write(f"Contract: {row['Contract']}")
-        st.write(f"Vulnerability: {vuln_val}")
-        st.write(f"Severity: {severity_val}")
-        st.write(f"Tool: {tool_val}")
-
-        st.write("Interpretation:")
-        st.write(
-            f"The contract shows {vuln_val} vulnerability with {severity_val} severity."
-        )
+    st.write("Recommendation: Further manual audit required.")
 
 st.markdown("---")
 
 # -------------------- REPORT --------------------
 st.subheader("Generate Report")
 
-if selected_contract is not None and vuln_val is not None:
-    report_text = f"""
+if selected_contract:
+    report = f"""
 SARMF-Bench Analysis Report
 
 Contract: {selected_contract}
@@ -164,7 +157,7 @@ Severity: {severity_val}
 Tool: {tool_val}
 
 Summary:
-The contract shows a {vuln_val} vulnerability with {severity_val} severity.
+The contract shows {vuln_val} vulnerability with {severity_val} severity.
 
 Recommendation:
 Further manual audit required.
@@ -176,12 +169,12 @@ BVCOE, New Delhi
 """
 
     st.download_button(
-        "Download report",
-        report_text,
-        file_name=f"{selected_contract}_report.txt",
+        "Download Report",
+        report,
+        file_name=f"{selected_contract}_report.txt"
     )
 else:
-    st.info("Select a contract to enable report.")
+    st.info("Select a contract first")
 
 st.markdown("---")
 
