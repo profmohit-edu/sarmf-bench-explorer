@@ -78,7 +78,7 @@ filtered_df = df[
 ]
 
 # METRICS
-st.markdown("## 📊 Overview")
+st.markdown("## Overview")
 
 col1, col2 = st.columns(2)
 
@@ -88,7 +88,7 @@ col2.metric("Unique Vulnerabilities", filtered_df["Vulnerability"].nunique())
 st.markdown("---")
 
 # TABLE
-st.markdown("## 📁 Contract Data")
+st.markdown("## Contract Data")
 
 st.dataframe(filtered_df, use_container_width=True)
 
