@@ -15,12 +15,7 @@ except Exception as e:
     st.stop()
 
 # ---------------- AI RISK SCORING ----------------
-severity_map = {
-    "Low": 1,
-    "Medium": 2,
-    "High": 3
-}
-
+severity_map = {"Low": 1, "Medium": 2, "High": 3}
 df["Risk Score"] = df["Severity"].map(severity_map).fillna(0)
 
 # ---------------- SIDEBAR ----------------
@@ -82,15 +77,20 @@ st.subheader("Overview")
 
 col1, col2, col3, col4 = st.columns(4)
 
-contracts_count = filtered_df["Contract"].nunique() if not filtered_df.empty else 0
-records_count = len(filtered_df)
-vuln_count = filtered_df["Vulnerability"].nunique() if not filtered_df.empty else 0
-avg_risk = round(filtered_df["Risk Score"].mean(), 2) if not filtered_df.empty else 0
+col1.metric("Contracts", filtered_df["Contract"].nunique())
+col2.metric("Records", len(filtered_df))
+col3.metric("Vulnerabilities", filtered_df["Vulnerability"].nunique())
+col4.metric("Avg Risk Score", round(filtered_df["Risk Score"].mean(), 2) if not filtered_df.empty else 0)
 
-col1.metric("Contracts", contracts_count)
-col2.metric("Records", records_count)
-col3.metric("Vulnerabilities", vuln_count)
-col4.metric("Avg Risk Score", avg_risk)
+# ---------------- TOP RISK HIGHLIGHT ----------------
+st.subheader("Critical Risk Highlight")
+
+if not filtered_df.empty:
+    top_contract = filtered_df.sort_values("Risk Score", ascending=False).iloc[0]
+    st.warning(
+        f"Highest Risk Contract: {top_contract['Contract']} "
+        f"({top_contract['Vulnerability']} | Severity: {top_contract['Severity']})"
+    )
 
 st.markdown("---")
 
@@ -118,13 +118,12 @@ with col2:
     st.write("Severity Distribution")
     if not filtered_df.empty:
         order = ["Low", "Medium", "High"]
-        severity_counts = (
+        st.bar_chart(
             filtered_df["Severity"]
             .value_counts()
             .reindex(order)
             .fillna(0)
         )
-        st.bar_chart(severity_counts)
 
 st.markdown("---")
 
@@ -138,8 +137,6 @@ if not filtered_df.empty:
         .sort_values("Risk Score", ascending=False)
     )
     st.dataframe(risk_table, use_container_width=True)
-else:
-    st.info("No data available for ranking.")
 
 st.markdown("---")
 
@@ -149,19 +146,34 @@ st.subheader("Tool Comparison")
 if not filtered_df.empty:
     tool_compare = pd.crosstab(filtered_df["Tool"], filtered_df["Vulnerability"])
     st.dataframe(tool_compare, use_container_width=True)
-else:
-    st.info("No data available for tool comparison.")
 
 st.markdown("---")
 
-# ---------------- TOOL EFFECTIVENESS GRAPH ----------------
+# ---------------- TOOL EFFECTIVENESS ----------------
 st.subheader("Tool Effectiveness")
 
 if not filtered_df.empty:
-    tool_effectiveness = filtered_df["Tool"].value_counts()
-    st.bar_chart(tool_effectiveness)
-else:
-    st.info("No data available for tool effectiveness graph.")
+    st.bar_chart(filtered_df["Tool"].value_counts())
+
+st.markdown("---")
+
+# ---------------- INTERPRETATION ----------------
+st.subheader("Analytical Interpretation")
+
+if not filtered_df.empty:
+    most_common_vuln = filtered_df["Vulnerability"].value_counts().idxmax()
+    most_used_tool = filtered_df["Tool"].value_counts().idxmax()
+
+    st.write(f"Most frequent vulnerability: {most_common_vuln}")
+    st.write(f"Most active tool: {most_used_tool}")
+
+    st.write("""
+The observed distribution suggests concentration of vulnerabilities in specific categories, 
+indicating recurring design weaknesses.
+
+Tool comparison highlights variability in detection coverage, supporting the need for 
+multi-tool validation in smart contract security analysis.
+""")
 
 st.markdown("---")
 
@@ -169,18 +181,9 @@ st.markdown("---")
 st.subheader("Contract Inspection")
 
 selected_contract = None
-vuln_val = None
-severity_val = None
-tool_val = None
-risk_val = None
 
-if filtered_df.empty:
-    st.info("No data available")
-else:
-    selected_contract = st.selectbox(
-        "Select Contract",
-        filtered_df["Contract"].unique()
-    )
+if not filtered_df.empty:
+    selected_contract = st.selectbox("Select Contract", filtered_df["Contract"].unique())
 
     row = filtered_df[filtered_df["Contract"] == selected_contract].iloc[0]
 
@@ -194,81 +197,45 @@ else:
     st.write("Severity:", severity_val)
     st.write("Tool:", tool_val)
     st.write("Risk Score:", risk_val)
-    st.write("Recommendation: Prioritize based on risk score and validate manually.")
 
-st.markdown("---")
-
-# ---------------- PDF REPORT FUNCTION ----------------
-def create_pdf_report(contract, vulnerability, severity, tool, risk_score):
+# ---------------- PDF FUNCTION ----------------
+def create_pdf(contract, vuln, severity, tool, risk):
     buffer = io.BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
 
-    y = height - 60
-    line_gap = 22
+    y = 800
+    pdf.setFont("Helvetica", 12)
 
-    pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawString(50, y, "SARMF-Bench Analysis Report")
-
-    y -= 2 * line_gap
-    pdf.setFont("Helvetica", 11)
+    pdf.drawString(50, y, "SARMF-Bench Report")
+    y -= 30
     pdf.drawString(50, y, f"Contract: {contract}")
-    y -= line_gap
-    pdf.drawString(50, y, f"Vulnerability: {vulnerability}")
-    y -= line_gap
+    y -= 20
+    pdf.drawString(50, y, f"Vulnerability: {vuln}")
+    y -= 20
     pdf.drawString(50, y, f"Severity: {severity}")
-    y -= line_gap
+    y -= 20
     pdf.drawString(50, y, f"Tool: {tool}")
-    y -= line_gap
-    pdf.drawString(50, y, f"Risk Score: {risk_score}")
+    y -= 20
+    pdf.drawString(50, y, f"Risk Score: {risk}")
 
-    y -= 2 * line_gap
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Summary")
-    y -= line_gap
-    pdf.setFont("Helvetica", 11)
-    pdf.drawString(50, y, f"The contract shows {vulnerability} vulnerability with {severity} severity.")
-    y -= line_gap
-    pdf.drawString(50, y, "Recommendation: Further manual audit required.")
-
-    y -= 2 * line_gap
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Developed by")
-    y -= line_gap
-    pdf.setFont("Helvetica", 11)
-    pdf.drawString(50, y, "Mohit Tiwari")
-    y -= line_gap
-    pdf.drawString(50, y, "Assistant Professor, Department of Computer Science")
-    y -= line_gap
-    pdf.drawString(50, y, "Bharati Vidyapeeth's College of Engineering, New Delhi")
-
-    pdf.showPage()
     pdf.save()
     buffer.seek(0)
     return buffer
 
-# ---------------- PDF REPORT DOWNLOAD ----------------
+# ---------------- PDF DOWNLOAD ----------------
 st.subheader("Generate PDF Report")
 
-if selected_contract is not None:
-    pdf_buffer = create_pdf_report(
-        selected_contract,
-        vuln_val,
-        severity_val,
-        tool_val,
-        risk_val
-    )
+if selected_contract:
+    pdf_file = create_pdf(selected_contract, vuln_val, severity_val, tool_val, risk_val)
 
     st.download_button(
-        label="Download PDF Report",
-        data=pdf_buffer,
-        file_name=f"{selected_contract}_report.pdf",
-        mime="application/pdf"
+        "Download PDF",
+        pdf_file,
+        file_name=f"{selected_contract}_report.pdf"
     )
-else:
-    st.info("Select a contract first")
 
-st.markdown("---")
+# ---------------- FINAL POSITIONING ----------------
+st.info("Prototype system demonstrating AI-assisted benchmarking of smart contract vulnerabilities.")
 
 # ---------------- FOOTER ----------------
-st.write("SARMF Framework | AI-Driven Smart Contract Security Analysis System")
+st.write("SARMF Framework | Research Prototype System")
