@@ -2,13 +2,23 @@ import streamlit as st
 import pandas as pd
 import random
 
+# Page configuration
 st.set_page_config(page_title="SARMF-Bench Explorer", layout="wide")
 
+# Title
 st.title("SARMF-Bench Explorer")
 st.subheader("Smart Contract Vulnerability Benchmarking System")
-st.write("Developed by Mohit Tiwari")
 
-# Generate large dataset
+# Author + affiliation (PROFESSIONAL FORMAT)
+st.write("""
+**Developed by Mohit Tiwari**  
+Assistant Professor, Department of Computer Science  
+Bharati Vidyapeeth's College of Engineering, New Delhi
+""")
+
+st.caption("An independent academic research system for smart contract vulnerability benchmarking by Mohit Tiwari,Dept of CSE,BVCOE Delhi.")
+
+# Generate dataset
 contracts = []
 vulnerabilities = ["Reentrancy", "Overflow", "Access Control", "Timestamp", "DoS"]
 severities = ["Low", "Medium", "High"]
@@ -27,8 +37,17 @@ df = pd.DataFrame(contracts)
 # Sidebar filters
 st.sidebar.header("Filters")
 
-vuln = st.sidebar.multiselect("Vulnerability", df["Vulnerability"].unique(), default=df["Vulnerability"].unique())
-severity = st.sidebar.multiselect("Severity", df["Severity"].unique(), default=df["Severity"].unique())
+vuln = st.sidebar.multiselect(
+    "Vulnerability",
+    df["Vulnerability"].unique(),
+    default=df["Vulnerability"].unique()
+)
+
+severity = st.sidebar.multiselect(
+    "Severity",
+    df["Severity"].unique(),
+    default=df["Severity"].unique()
+)
 
 filtered_df = df[
     (df["Vulnerability"].isin(vuln)) &
@@ -40,7 +59,7 @@ col1, col2 = st.columns(2)
 col1.metric("Total Contracts", len(filtered_df))
 col2.metric("Unique Vulnerabilities", filtered_df["Vulnerability"].nunique())
 
-# Table
+# Data table
 st.dataframe(filtered_df, use_container_width=True)
 
 # Charts
@@ -49,18 +68,24 @@ st.bar_chart(filtered_df["Vulnerability"].value_counts())
 
 st.subheader("Severity Distribution")
 st.bar_chart(filtered_df["Severity"].value_counts())
-import streamlit as st
-import pandas as pd
 
-st.title("SARMF-Bench Explorer")
-st.write("Developed by Mohit Tiwari")
+# Contract inspection (KEY FEATURE)
+st.subheader("🔍 Contract Inspection")
 
-data = {
-    "Contract": ["C1", "C2", "C3"],
-    "Vulnerability": ["Reentrancy", "Overflow", "Access Control"],
-    "Severity": ["High", "Medium", "High"]
-}
+selected_contract = st.selectbox(
+    "Select Contract",
+    filtered_df["Contract"]
+)
 
-df = pd.DataFrame(data)
+contract_data = filtered_df[filtered_df["Contract"] == selected_contract]
 
-st.dataframe(df)
+st.write("### Details")
+st.write(contract_data)
+
+st.write("### Interpretation")
+
+vuln_val = contract_data["Vulnerability"].values[0]
+severity_val = contract_data["Severity"].values[0]
+
+st.success(f"This contract shows {vuln_val} vulnerability with {severity_val} severity.")
+st.warning("Recommendation: Further manual audit required.")
