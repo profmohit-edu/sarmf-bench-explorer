@@ -1,111 +1,101 @@
 import io
 import streamlit as st
 import pandas as pd
-from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
 
-st.set_page_config(page_title="SARMF-Bench Explorer", layout="wide")
+st.set_page_config(page_title="SARMF Interactive Explorer", layout="wide")
 
 # ---------------- LOAD CSV ----------------
 try:
     df = pd.read_csv("sarmf_dataset.csv")
 except Exception as e:
-    st.error("CSV NOT FOUND - Keep 'sarmf_dataset.csv' in same folder as app.py")
+    st.error("CSV NOT FOUND")
     st.write(e)
     st.stop()
 
-# ---------------- AI RISK SCORING ----------------
-severity_map = {"Low": 1, "Medium": 2, "High": 3}
-df["Risk Score"] = df["Severity"].map(severity_map).fillna(0)
+# ---------------- SIDEBAR CONTROLS ----------------
+st.sidebar.title("Interactive Controls")
 
-# ---------------- SIDEBAR ----------------
-st.sidebar.title("SARMF Controls")
+# 🎯 AI Risk Weight Control
+st.sidebar.subheader("Risk Weighting")
 
-vuln_filter = st.sidebar.multiselect(
-    "Vulnerability",
-    sorted(df["Vulnerability"].dropna().unique()),
-    default=sorted(df["Vulnerability"].dropna().unique())
-)
+low_w = st.sidebar.slider("Low Severity Weight", 0, 5, 1)
+med_w = st.sidebar.slider("Medium Severity Weight", 0, 5, 2)
+high_w = st.sidebar.slider("High Severity Weight", 0, 5, 3)
 
-severity_filter = st.sidebar.multiselect(
-    "Severity",
-    sorted(df["Severity"].dropna().unique()),
-    default=sorted(df["Severity"].dropna().unique())
-)
+severity_map = {
+    "Low": low_w,
+    "Medium": med_w,
+    "High": high_w
+}
 
+df["Risk Score"] = df["Severity"].map(severity_map)
+
+# 🎯 Tool Toggle
 tool_filter = st.sidebar.multiselect(
-    "Tool",
-    sorted(df["Tool"].dropna().unique()),
-    default=sorted(df["Tool"].dropna().unique())
+    "Select Tools",
+    df["Tool"].unique(),
+    default=df["Tool"].unique()
 )
+
+# 🎯 Risk Threshold Filter
+risk_threshold = st.sidebar.slider("Minimum Risk Score", 0, 5, 0)
 
 filtered_df = df[
-    df["Vulnerability"].isin(vuln_filter) &
-    df["Severity"].isin(severity_filter) &
-    df["Tool"].isin(tool_filter)
+    (df["Tool"].isin(tool_filter)) &
+    (df["Risk Score"] >= risk_threshold)
 ]
 
 # ---------------- HEADER ----------------
-st.title("SARMF-Bench Explorer")
-st.subheader("AI-Assisted Smart Contract Vulnerability Benchmarking System")
-
-st.write("""
-Developed by Mohit Tiwari  
-Assistant Professor, Department of Computer Science  
-Bharati Vidyapeeth's College of Engineering, New Delhi
-""")
+st.title("SARMF Interactive Explorer")
+st.subheader("AI-Driven Smart Contract Benchmarking System")
 
 st.markdown("---")
 
-# ---------------- RESEARCH POSITIONING ----------------
-st.subheader("Research Context")
+# ---------------- LIVE FEEDBACK ----------------
+st.subheader("Live System Behavior")
 
-st.write("""
-This system demonstrates a structured benchmarking approach for analyzing smart contract vulnerabilities 
-across multiple automated analysis tools.
-
-It incorporates a rule-based risk scoring mechanism that simulates AI-driven vulnerability prioritization, 
-enabling comparative evaluation and decision support in secure blockchain development.
-
-The framework can be extended into a full AI-based Cyber Maturity Index model.
+st.write(f"""
+Current Configuration:
+- Low Weight: {low_w}
+- Medium Weight: {med_w}
+- High Weight: {high_w}
+- Risk Threshold: {risk_threshold}
 """)
-
-st.markdown("---")
 
 # ---------------- OVERVIEW ----------------
-st.subheader("Overview")
-
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3 = st.columns(3)
 
 col1.metric("Contracts", filtered_df["Contract"].nunique())
 col2.metric("Records", len(filtered_df))
-col3.metric("Vulnerabilities", filtered_df["Vulnerability"].nunique())
-col4.metric("Avg Risk Score", round(filtered_df["Risk Score"].mean(), 2) if not filtered_df.empty else 0)
+col3.metric("Avg Risk", round(filtered_df["Risk Score"].mean(), 2) if not filtered_df.empty else 0)
 
-# ---------------- TOP RISK HIGHLIGHT ----------------
-st.subheader("Critical Risk Highlight")
+# ---------------- TOP RISK ----------------
+st.subheader("Top Risk Contract")
 
 if not filtered_df.empty:
-    top_contract = filtered_df.sort_values("Risk Score", ascending=False).iloc[0]
-    st.warning(
-        f"Highest Risk Contract: {top_contract['Contract']} "
-        f"({top_contract['Vulnerability']} | Severity: {top_contract['Severity']})"
-    )
+    top = filtered_df.sort_values("Risk Score", ascending=False).iloc[0]
+    st.warning(f"{top['Contract']} → {top['Vulnerability']} (Risk: {top['Risk Score']})")
 
-st.markdown("---")
+# ---------------- WHAT-IF SIMULATION ----------------
+st.subheader("What-if Simulation")
 
-# ---------------- DATA TABLE ----------------
-st.subheader("Contract Data")
+if not filtered_df.empty:
+    contract = st.selectbox("Select Contract to Modify", filtered_df["Contract"].unique())
 
-if filtered_df.empty:
-    st.warning("No matching data")
-else:
-    st.dataframe(filtered_df, use_container_width=True)
+    row = filtered_df[filtered_df["Contract"] == contract].iloc[0]
 
-st.markdown("---")
+    new_severity = st.selectbox("Change Severity", ["Low", "Medium", "High"])
 
-# ---------------- ANALYSIS ----------------
-st.subheader("Analysis")
+    simulated_score = severity_map[new_severity]
+
+    st.write("Original Severity:", row["Severity"])
+    st.write("New Severity:", new_severity)
+    st.write("New Risk Score:", simulated_score)
+
+# ---------------- CHARTS ----------------
+st.subheader("Dynamic Analysis")
 
 col1, col2 = st.columns(2)
 
@@ -115,98 +105,33 @@ with col1:
         st.bar_chart(filtered_df["Vulnerability"].value_counts())
 
 with col2:
-    st.write("Severity Distribution")
+    st.write("Tool Effectiveness")
     if not filtered_df.empty:
-        order = ["Low", "Medium", "High"]
-        st.bar_chart(
-            filtered_df["Severity"]
-            .value_counts()
-            .reindex(order)
-            .fillna(0)
-        )
+        st.bar_chart(filtered_df["Tool"].value_counts())
 
-st.markdown("---")
-
-# ---------------- TOP RISK CONTRACTS ----------------
-st.subheader("Top Risk Contracts")
+# ---------------- RANKING ----------------
+st.subheader("Top Risk Ranking")
 
 if not filtered_df.empty:
-    risk_table = (
+    ranking = (
         filtered_df.groupby("Contract", as_index=False)["Risk Score"]
         .max()
         .sort_values("Risk Score", ascending=False)
     )
-    st.dataframe(risk_table, use_container_width=True)
+    st.dataframe(ranking)
 
-st.markdown("---")
+# ---------------- TABLE ----------------
+st.subheader("Dataset View")
 
-# ---------------- TOOL COMPARISON ----------------
-st.subheader("Tool Comparison")
+st.dataframe(filtered_df, use_container_width=True)
 
-if not filtered_df.empty:
-    tool_compare = pd.crosstab(filtered_df["Tool"], filtered_df["Vulnerability"])
-    st.dataframe(tool_compare, use_container_width=True)
-
-st.markdown("---")
-
-# ---------------- TOOL EFFECTIVENESS ----------------
-st.subheader("Tool Effectiveness")
-
-if not filtered_df.empty:
-    st.bar_chart(filtered_df["Tool"].value_counts())
-
-st.markdown("---")
-
-# ---------------- INTERPRETATION ----------------
-st.subheader("Analytical Interpretation")
-
-if not filtered_df.empty:
-    most_common_vuln = filtered_df["Vulnerability"].value_counts().idxmax()
-    most_used_tool = filtered_df["Tool"].value_counts().idxmax()
-
-    st.write(f"Most frequent vulnerability: {most_common_vuln}")
-    st.write(f"Most active tool: {most_used_tool}")
-
-    st.write("""
-The observed distribution suggests concentration of vulnerabilities in specific categories, 
-indicating recurring design weaknesses.
-
-Tool comparison highlights variability in detection coverage, supporting the need for 
-multi-tool validation in smart contract security analysis.
-""")
-
-st.markdown("---")
-
-# ---------------- CONTRACT INSPECTION ----------------
-st.subheader("Contract Inspection")
-
-selected_contract = None
-
-if not filtered_df.empty:
-    selected_contract = st.selectbox("Select Contract", filtered_df["Contract"].unique())
-
-    row = filtered_df[filtered_df["Contract"] == selected_contract].iloc[0]
-
-    vuln_val = row["Vulnerability"]
-    severity_val = row["Severity"]
-    tool_val = row["Tool"]
-    risk_val = row["Risk Score"]
-
-    st.write("Contract:", row["Contract"])
-    st.write("Vulnerability:", vuln_val)
-    st.write("Severity:", severity_val)
-    st.write("Tool:", tool_val)
-    st.write("Risk Score:", risk_val)
-
-# ---------------- PDF FUNCTION ----------------
+# ---------------- PDF ----------------
 def create_pdf(contract, vuln, severity, tool, risk):
     buffer = io.BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=A4)
 
     y = 800
-    pdf.setFont("Helvetica", 12)
-
-    pdf.drawString(50, y, "SARMF-Bench Report")
+    pdf.drawString(50, y, "SARMF Interactive Report")
     y -= 30
     pdf.drawString(50, y, f"Contract: {contract}")
     y -= 20
@@ -222,20 +147,15 @@ def create_pdf(contract, vuln, severity, tool, risk):
     buffer.seek(0)
     return buffer
 
-# ---------------- PDF DOWNLOAD ----------------
-st.subheader("Generate PDF Report")
+st.subheader("Export Report")
 
-if selected_contract:
-    pdf_file = create_pdf(selected_contract, vuln_val, severity_val, tool_val, risk_val)
+if not filtered_df.empty:
+    c = st.selectbox("Select Contract for Report", filtered_df["Contract"].unique())
+    r = filtered_df[filtered_df["Contract"] == c].iloc[0]
 
-    st.download_button(
-        "Download PDF",
-        pdf_file,
-        file_name=f"{selected_contract}_report.pdf"
-    )
+    pdf = create_pdf(c, r["Vulnerability"], r["Severity"], r["Tool"], r["Risk Score"])
 
-# ---------------- FINAL POSITIONING ----------------
-st.info("Prototype system demonstrating AI-assisted benchmarking of smart contract vulnerabilities.")
+    st.download_button("Download PDF", pdf, file_name=f"{c}_report.pdf")
 
-# ---------------- FOOTER ----------------
-st.write("SARMF Framework | Research Prototype System")
+# ---------------- FINAL ----------------
+st.info("Interactive benchmarking system with AI-assisted risk modeling.")
