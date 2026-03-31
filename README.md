@@ -152,14 +152,9 @@ sarmf-bench-explorer/
 
 ## 7. Citation
 
-If you use SARMF-Bench or SARMF-Bench Explorer in your research, please cite:
+If you use SARMF-Bench Explorer in your research, please cite:
 
-1. The **SARMF-Bench dataset and framework** via the DOIs listed above.  
-2. (When available) the associated **software / tool paper** describing SARMF-Bench Explorer.
-
-A generic citation template could be:
-
-> Tiwari, M. (2026). SARMF-Bench Explorer: An Interactive Portal for Reproducible Smart Contract Vulnerability Benchmarking. Software and benchmark, Department of Computer Science and Engineering, BVCOE, Delhi. Available at https://sarmfbenchexplorerbvcoend.streamlit.app/
+[1] M. Tiwari, “SARMF-Bench Explorer v1.0 – AI-Assisted Smart Contract Vulnerability Benchmarking System”. Zenodo, Mar. 31, 2026. doi: 10.5281/zenodo.19354672.
 
 ---
 
