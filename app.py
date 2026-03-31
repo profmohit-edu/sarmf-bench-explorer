@@ -1,8 +1,11 @@
+Here is the **full updated, finalized `app.py`** ready to copy‑paste. It uses your expanded `sarmf_bench_real.csv` and includes the BVCOE, Delhi and home‑lab wording.
+
+This code expects `sarmf_bench_real.csv` (≈180 rows) to be in the same folder as `app.py`.
+
+```python
 import streamlit as st
 import pandas as pd
-import os
-import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
@@ -20,14 +23,15 @@ st.set_page_config(page_title="SARMF-Bench Explorer", layout="wide")
 # HEADER
 # -------------------------------
 st.title("SARMF-Bench Explorer")
-st.subheader("AI-Assisted Smart Contract Vulnerability Benchmarking System (Demo)")
+st.subheader("AI-Assisted Smart Contract Vulnerability Benchmarking System")
 
 st.markdown("""
 **Mohit Tiwari**  
-Assistant Professor, Department of Computer Science  
-Bharati Vidyapeeth's College of Engineering, New Delhi  
+Assistant Professor, Department of Computer Science and Engineering,  
+Bharati Vidyapeeth's College of Engineering (BVCOE, Delhi)  
 
-This system is based on a self-developed smart contract vulnerability benchmark dataset (**SARMF-Bench**), independently designed and curated for research and evaluation purposes.  
+This system is powered by SARMF-Bench, a smart contract vulnerability benchmark that I independently designed, implemented, and maintain from my home research lab aligned with the Department of Computer Science and Engineering at BVCOE, Delhi.  
+
 The dataset and framework are archived across multiple international repositories with DOI-backed accessibility:
 
 - **Harvard Dataverse (Dataset DOI):** [https://doi.org/10.7910/DVN/0SP3OO](https://doi.org/10.7910/DVN/0SP3OO)  
@@ -40,7 +44,7 @@ The dataset and framework are archived across multiple international repositorie
 **Academic Profiles:**  
 - ORCID: [https://orcid.org/0000-0003-1836-3451](https://orcid.org/0000-0003-1836-3451)  
 - Google Scholar: [https://scholar.google.com/citations?user=ZFRPBBcAAAAJ&hl=en](https://scholar.google.com/citations?user=ZFRPBBcAAAAJ&hl=en)  
-- Scopus: [http://www.scopus.com/authid/detail.url?authorId=24483852000](http://www.scopus.com/authid/detail.url?authorId=24483852000)  
+- Scopus: [https://www.scopus.com/authid/detail.uri?authorId=24483852000](https://www.scopus.com/authid/detail.uri?authorId=24483852000)  
 - Web of Science: [https://www.webofscience.com/wos/author/record/33087873](https://www.webofscience.com/wos/author/record/33087873)  
 - Vidwan: [https://vidwan.inflibnet.ac.in/profile/293249](https://vidwan.inflibnet.ac.in/profile/293249)  
 - ResearchGate: [https://www.researchgate.net/profile/Mohit-Tiwari-6](https://www.researchgate.net/profile/Mohit-Tiwari-6)  
@@ -56,34 +60,26 @@ st.info(
 st.divider()
 
 # -------------------------------
-# DATA GENERATION (DEMO)
+# REAL DATA LOAD (SARMF-Bench CSV)
 # -------------------------------
-csv_file = "sarmf_data.csv"
-
-if not os.path.exists(csv_file):
-    contracts = [f"Contract_{i}.sol" for i in range(1, 151)]
-    vulnerabilities = ["Reentrancy", "Overflow", "Access Control", "Front Running", "DoS"]
-    severities = ["Low", "Medium", "High", "Critical"]
-    tools = ["Slither", "Mythril", "Oyente"]
-
-    rows = []
-    start_date = datetime(2026, 1, 1)
-
-    for i in range(150):
-        rows.append({
-            "Contract": contracts[i],
-            "Vulnerability": random.choice(vulnerabilities),
-            "Severity": random.choice(severities),
-            "Tool": random.choice(tools),
-            "Date": (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
-        })
-
-    pd.DataFrame(rows).to_csv(csv_file, index=False)
+csv_file = "sarmf_bench_real.csv"  # expanded benchmark CSV
 
 @st.cache_data
 def load_data(path: str) -> pd.DataFrame:
     df = pd.read_csv(path)
-    df["Date"] = pd.to_datetime(df["Date"])
+
+    # Ensure required columns exist
+    required = {"Contract", "Vulnerability", "Severity", "Tool"}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing columns in CSV: {missing}")
+
+    # Handle Date column (optional but preferred)
+    if "Date" in df.columns:
+        df["Date"] = pd.to_datetime(df["Date"])
+    else:
+        df["Date"] = pd.to_datetime("2026-01-01")
+
     return df
 
 df = load_data(csv_file)
@@ -212,7 +208,7 @@ with ai_tab:
     st.subheader("Demo: AI-based high-risk classifier")
 
     st.caption(
-        "This is a toy classifier trained on the current synthetic dataset using a "
+        "This classifier is trained on the current SARMF-Bench CSV using a "
         "Random Forest model and one-hot encoding. It predicts whether a given "
         "Vulnerability / Severity / Tool combination is likely to be high risk."
     )
@@ -252,7 +248,7 @@ with ai_tab:
         buffer = io.BytesIO()
         c = canvas.Canvas(buffer, pagesize=A4)
 
-        c.drawString(50, 800, "SARMF-Bench Risk Report (Demo)")
+        c.drawString(50, 800, "SARMF-Bench Risk Report")
 
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
         c.drawString(50, 780, f"Generated on: {now_str}")
@@ -267,7 +263,7 @@ with ai_tab:
         c.drawString(50, 720, f"Tools: {', '.join(tool_filter) if tool_filter else 'None selected'}")
         c.drawString(50, 700, f"Severities: {', '.join(severity_filter) if severity_filter else 'None selected'}")
 
-        c.drawString(50, 660, "Developed by Mohit Tiwari, BVCOE, New Delhi")
+        c.drawString(50, 660, "Developed by Mohit Tiwari, BVCOE, Delhi")
         c.save()
 
         buffer.seek(0)
@@ -290,7 +286,8 @@ with data_tab:
         st.dataframe(filtered_df, use_container_width=True)
 
     st.caption(
-        "This is a synthetic demo dataset generated for SARMF-Bench Explorer. "
-        "In a full deployment, this table would show real smart contracts, SWC "
-        "labels, and cross-tool findings from the SARMF-Bench benchmark."
+        "SARMF-Bench Explorer is a personal research tool from my independent home lab, "
+        "built to showcase a DOI-backed smart contract vulnerability benchmark curated "
+        "at the Department of Computer Science and Engineering, BVCOE, Delhi."
     )
+```
