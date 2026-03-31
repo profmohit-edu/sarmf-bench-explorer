@@ -1,0 +1,181 @@
+Contract,Vulnerability,Severity,Tool,Date
+SWC107_Reentrancy_1.sol,Reentrancy,High,Slither,2026-03-01
+SWC107_Reentrancy_1.sol,Reentrancy,High,Mythril,2026-03-01
+SWC101_Overflow_1.sol,Integer Overflow,High,Slither,2026-03-01
+SWC101_Overflow_1.sol,Integer Overflow,Medium,Mythril,2026-03-01
+SWC105_AccessControl_1.sol,Access Control,High,Slither,2026-03-02
+SWC105_AccessControl_1.sol,Access Control,High,Mythril,2026-03-02
+SWC104_UncheckedCalls_1.sol,Unchecked External Calls,Medium,Slither,2026-03-02
+SWC104_UncheckedCalls_1.sol,Unchecked External Calls,Medium,Mythril,2026-03-02
+SWC113_DOSLoop_1.sol,Denial of Service (Loop),High,Slither,2026-03-03
+SWC113_DOSLoop_1.sol,Denial of Service (Loop),Critical,Mythril,2026-03-03
+SWC107_Reentrancy_2.sol,Reentrancy,High,Slither,2026-03-06
+SWC107_Reentrancy_2.sol,Reentrancy,Critical,Mythril,2026-03-06
+SWC107_Reentrancy_3.sol,Reentrancy,Medium,Slither,2026-03-07
+SWC107_Reentrancy_3.sol,Reentrancy,High,Oyente,2026-03-07
+SWC101_Overflow_2.sol,Integer Overflow,High,Slither,2026-03-08
+SWC101_Overflow_2.sol,Integer Overflow,Medium,Mythril,2026-03-08
+SWC101_Overflow_3.sol,Integer Overflow,Low,Slither,2026-03-09
+SWC101_Overflow_3.sol,Integer Overflow,High,Oyente,2026-03-09
+SWC105_AccessControl_2.sol,Access Control,High,Slither,2026-03-10
+SWC105_AccessControl_2.sol,Access Control,Medium,Mythril,2026-03-10
+SWC105_AccessControl_3.sol,Access Control,Low,Slither,2026-03-11
+SWC105_AccessControl_3.sol,Access Control,High,Oyente,2026-03-11
+SWC104_UncheckedCalls_2.sol,Unchecked External Calls,Medium,Slither,2026-03-12
+SWC104_UncheckedCalls_2.sol,Unchecked External Calls,High,Mythril,2026-03-12
+SWC104_UncheckedCalls_3.sol,Unchecked External Calls,Low,Slither,2026-03-13
+SWC104_UncheckedCalls_3.sol,Unchecked External Calls,Medium,Oyente,2026-03-13
+SWC113_DOSLoop_2.sol,Denial of Service (Loop),High,Slither,2026-03-14
+SWC113_DOSLoop_2.sol,Denial of Service (Loop),Critical,Mythril,2026-03-14
+SWC113_DOSGas_1.sol,Denial of Service (Gas),Medium,Slither,2026-03-15
+SWC113_DOSGas_1.sol,Denial of Service (Gas),High,Oyente,2026-03-15
+FR_Ordering_1.sol,Front Running,High,Slither,2026-03-16
+FR_Ordering_1.sol,Front Running,Medium,Mythril,2026-03-16
+FR_Ordering_2.sol,Front Running,Low,Slither,2026-03-17
+FR_Ordering_2.sol,Front Running,High,Oyente,2026-03-17
+SWC116_Timestamp_1.sol,Timestamp Dependence,Medium,Slither,2026-03-18
+SWC116_Timestamp_1.sol,Timestamp Dependence,High,Mythril,2026-03-18
+SWC116_Timestamp_2.sol,Timestamp Dependence,Low,Slither,2026-03-19
+SWC116_Timestamp_2.sol,Timestamp Dependence,Medium,Oyente,2026-03-19
+SWC107_Reentrancy_1.sol,Reentrancy,Low,Slither,2026-03-02
+SWC107_Reentrancy_1.sol,Reentrancy,Low,Mythril,2026-03-02
+SWC107_Reentrancy_1.sol,Reentrancy,High,Oyente,2026-03-02
+SWC101_Overflow_1.sol,Integer Overflow,High,Slither,2026-03-02
+SWC101_Overflow_1.sol,Integer Overflow,High,Mythril,2026-03-02
+SWC101_Overflow_1.sol,Integer Overflow,Medium,Oyente,2026-03-02
+SWC105_AccessControl_1.sol,Access Control,Low,Slither,2026-03-02
+SWC105_AccessControl_1.sol,Access Control,Low,Mythril,2026-03-02
+SWC105_AccessControl_1.sol,Access Control,Medium,Oyente,2026-03-02
+SWC104_UncheckedCalls_1.sol,Unchecked External Calls,Critical,Slither,2026-03-02
+SWC104_UncheckedCalls_1.sol,Unchecked External Calls,Low,Mythril,2026-03-02
+SWC104_UncheckedCalls_1.sol,Unchecked External Calls,High,Oyente,2026-03-02
+SWC113_DOSLoop_1.sol,Denial of Service (Loop),Medium,Slither,2026-03-02
+SWC113_DOSLoop_1.sol,Denial of Service (Loop),Low,Mythril,2026-03-02
+SWC113_DOSLoop_1.sol,Denial of Service (Loop),Critical,Oyente,2026-03-02
+SWC113_DOSGas_1.sol,Denial of Service (Gas),High,Slither,2026-03-02
+SWC113_DOSGas_1.sol,Denial of Service (Gas),Critical,Mythril,2026-03-02
+SWC113_DOSGas_1.sol,Denial of Service (Gas),Medium,Oyente,2026-03-02
+FR_Ordering_1.sol,Front Running,Medium,Slither,2026-03-02
+FR_Ordering_1.sol,Front Running,High,Mythril,2026-03-02
+FR_Ordering_1.sol,Front Running,High,Oyente,2026-03-02
+SWC116_Timestamp_1.sol,Timestamp Dependence,High,Slither,2026-03-02
+SWC116_Timestamp_1.sol,Timestamp Dependence,Medium,Mythril,2026-03-02
+SWC116_Timestamp_1.sol,Timestamp Dependence,Critical,Oyente,2026-03-02
+SWC107_Reentrancy_2.sol,Reentrancy,High,Slither,2026-03-03
+SWC107_Reentrancy_2.sol,Reentrancy,Medium,Mythril,2026-03-03
+SWC107_Reentrancy_2.sol,Reentrancy,Critical,Oyente,2026-03-03
+SWC101_Overflow_2.sol,Integer Overflow,Critical,Slither,2026-03-03
+SWC101_Overflow_2.sol,Integer Overflow,Low,Mythril,2026-03-03
+SWC101_Overflow_2.sol,Integer Overflow,Low,Oyente,2026-03-03
+SWC105_AccessControl_2.sol,Access Control,High,Slither,2026-03-03
+SWC105_AccessControl_2.sol,Access Control,Critical,Mythril,2026-03-03
+SWC105_AccessControl_2.sol,Access Control,High,Oyente,2026-03-03
+SWC104_UncheckedCalls_2.sol,Unchecked External Calls,Medium,Slither,2026-03-03
+SWC104_UncheckedCalls_2.sol,Unchecked External Calls,Medium,Mythril,2026-03-03
+SWC104_UncheckedCalls_2.sol,Unchecked External Calls,Critical,Oyente,2026-03-03
+SWC113_DOSLoop_2.sol,Denial of Service (Loop),Critical,Slither,2026-03-03
+SWC113_DOSLoop_2.sol,Denial of Service (Loop),High,Mythril,2026-03-03
+SWC113_DOSLoop_2.sol,Denial of Service (Loop),Critical,Oyente,2026-03-03
+SWC113_DOSGas_2.sol,Denial of Service (Gas),High,Slither,2026-03-03
+SWC113_DOSGas_2.sol,Denial of Service (Gas),Low,Mythril,2026-03-03
+SWC113_DOSGas_2.sol,Denial of Service (Gas),High,Oyente,2026-03-03
+FR_Ordering_2.sol,Front Running,High,Slither,2026-03-03
+FR_Ordering_2.sol,Front Running,Critical,Mythril,2026-03-03
+FR_Ordering_2.sol,Front Running,Low,Oyente,2026-03-03
+SWC116_Timestamp_2.sol,Timestamp Dependence,Medium,Slither,2026-03-03
+SWC116_Timestamp_2.sol,Timestamp Dependence,Medium,Mythril,2026-03-03
+SWC116_Timestamp_2.sol,Timestamp Dependence,High,Oyente,2026-03-03
+SWC107_Reentrancy_3.sol,Reentrancy,Critical,Slither,2026-03-04
+SWC107_Reentrancy_3.sol,Reentrancy,Medium,Mythril,2026-03-04
+SWC107_Reentrancy_3.sol,Reentrancy,Medium,Oyente,2026-03-04
+SWC101_Overflow_3.sol,Integer Overflow,Critical,Slither,2026-03-04
+SWC101_Overflow_3.sol,Integer Overflow,Critical,Mythril,2026-03-04
+SWC101_Overflow_3.sol,Integer Overflow,Medium,Oyente,2026-03-04
+SWC105_AccessControl_3.sol,Access Control,Low,Slither,2026-03-04
+SWC105_AccessControl_3.sol,Access Control,Low,Mythril,2026-03-04
+SWC105_AccessControl_3.sol,Access Control,High,Oyente,2026-03-04
+SWC104_UncheckedCalls_3.sol,Unchecked External Calls,Low,Slither,2026-03-04
+SWC104_UncheckedCalls_3.sol,Unchecked External Calls,Medium,Mythril,2026-03-04
+SWC104_UncheckedCalls_3.sol,Unchecked External Calls,High,Oyente,2026-03-04
+SWC113_DOSLoop_3.sol,Denial of Service (Loop),Critical,Slither,2026-03-04
+SWC113_DOSLoop_3.sol,Denial of Service (Loop),High,Mythril,2026-03-04
+SWC113_DOSLoop_3.sol,Denial of Service (Loop),High,Oyente,2026-03-04
+SWC113_DOSGas_3.sol,Denial of Service (Gas),Medium,Slither,2026-03-04
+SWC113_DOSGas_3.sol,Denial of Service (Gas),High,Mythril,2026-03-04
+SWC113_DOSGas_3.sol,Denial of Service (Gas),Medium,Oyente,2026-03-04
+FR_Ordering_3.sol,Front Running,Low,Slither,2026-03-04
+FR_Ordering_3.sol,Front Running,High,Mythril,2026-03-04
+FR_Ordering_3.sol,Front Running,Medium,Oyente,2026-03-04
+SWC116_Timestamp_3.sol,Timestamp Dependence,Medium,Slither,2026-03-04
+SWC116_Timestamp_3.sol,Timestamp Dependence,High,Mythril,2026-03-04
+SWC116_Timestamp_3.sol,Timestamp Dependence,Low,Oyente,2026-03-04
+SWC107_Reentrancy_4.sol,Reentrancy,Low,Slither,2026-03-05
+SWC107_Reentrancy_4.sol,Reentrancy,Critical,Mythril,2026-03-05
+SWC107_Reentrancy_4.sol,Reentrancy,Medium,Oyente,2026-03-05
+SWC101_Overflow_4.sol,Integer Overflow,Low,Slither,2026-03-05
+SWC101_Overflow_4.sol,Integer Overflow,Medium,Mythril,2026-03-05
+SWC101_Overflow_4.sol,Integer Overflow,Low,Oyente,2026-03-05
+SWC105_AccessControl_4.sol,Access Control,Medium,Slither,2026-03-05
+SWC105_AccessControl_4.sol,Access Control,Medium,Mythril,2026-03-05
+SWC105_AccessControl_4.sol,Access Control,Medium,Oyente,2026-03-05
+SWC104_UncheckedCalls_4.sol,Unchecked External Calls,Medium,Slither,2026-03-05
+SWC104_UncheckedCalls_4.sol,Unchecked External Calls,High,Mythril,2026-03-05
+SWC104_UncheckedCalls_4.sol,Unchecked External Calls,Critical,Oyente,2026-03-05
+SWC113_DOSLoop_4.sol,Denial of Service (Loop),Critical,Slither,2026-03-05
+SWC113_DOSLoop_4.sol,Denial of Service (Loop),Low,Mythril,2026-03-05
+SWC113_DOSLoop_4.sol,Denial of Service (Loop),Low,Oyente,2026-03-05
+SWC113_DOSGas_4.sol,Denial of Service (Gas),Low,Slither,2026-03-05
+SWC113_DOSGas_4.sol,Denial of Service (Gas),Medium,Mythril,2026-03-05
+SWC113_DOSGas_4.sol,Denial of Service (Gas),Medium,Oyente,2026-03-05
+FR_Ordering_4.sol,Front Running,Medium,Slither,2026-03-05
+FR_Ordering_4.sol,Front Running,Low,Mythril,2026-03-05
+FR_Ordering_4.sol,Front Running,Medium,Oyente,2026-03-05
+SWC116_Timestamp_4.sol,Timestamp Dependence,High,Slither,2026-03-05
+SWC116_Timestamp_4.sol,Timestamp Dependence,Low,Mythril,2026-03-05
+SWC116_Timestamp_4.sol,Timestamp Dependence,Low,Oyente,2026-03-05
+SWC107_Reentrancy_5.sol,Reentrancy,Low,Slither,2026-03-06
+SWC107_Reentrancy_5.sol,Reentrancy,Medium,Mythril,2026-03-06
+SWC107_Reentrancy_5.sol,Reentrancy,Critical,Oyente,2026-03-06
+SWC101_Overflow_5.sol,Integer Overflow,Medium,Slither,2026-03-06
+SWC101_Overflow_5.sol,Integer Overflow,Low,Mythril,2026-03-06
+SWC101_Overflow_5.sol,Integer Overflow,Medium,Oyente,2026-03-06
+SWC105_AccessControl_5.sol,Access Control,High,Slither,2026-03-06
+SWC105_AccessControl_5.sol,Access Control,Medium,Mythril,2026-03-06
+SWC105_AccessControl_5.sol,Access Control,Critical,Oyente,2026-03-06
+SWC104_UncheckedCalls_5.sol,Unchecked External Calls,Medium,Slither,2026-03-06
+SWC104_UncheckedCalls_5.sol,Unchecked External Calls,High,Mythril,2026-03-06
+SWC104_UncheckedCalls_5.sol,Unchecked External Calls,Low,Oyente,2026-03-06
+SWC113_DOSLoop_5.sol,Denial of Service (Loop),Low,Slither,2026-03-06
+SWC113_DOSLoop_5.sol,Denial of Service (Loop),High,Mythril,2026-03-06
+SWC113_DOSLoop_5.sol,Denial of Service (Loop),Medium,Oyente,2026-03-06
+SWC113_DOSGas_5.sol,Denial of Service (Gas),Medium,Slither,2026-03-06
+SWC113_DOSGas_5.sol,Denial of Service (Gas),Critical,Mythril,2026-03-06
+SWC113_DOSGas_5.sol,Denial of Service (Gas),Medium,Oyente,2026-03-06
+FR_Ordering_5.sol,Front Running,Critical,Slither,2026-03-06
+FR_Ordering_5.sol,Front Running,Low,Mythril,2026-03-06
+FR_Ordering_5.sol,Front Running,Critical,Oyente,2026-03-06
+SWC116_Timestamp_5.sol,Timestamp Dependence,Critical,Slither,2026-03-06
+SWC116_Timestamp_5.sol,Timestamp Dependence,Low,Mythril,2026-03-06
+SWC116_Timestamp_5.sol,Timestamp Dependence,Low,Oyente,2026-03-06
+SWC107_Reentrancy_6.sol,Reentrancy,Medium,Slither,2026-03-07
+SWC107_Reentrancy_6.sol,Reentrancy,Medium,Mythril,2026-03-07
+SWC107_Reentrancy_6.sol,Reentrancy,Medium,Oyente,2026-03-07
+SWC101_Overflow_6.sol,Integer Overflow,Low,Slither,2026-03-07
+SWC101_Overflow_6.sol,Integer Overflow,Medium,Mythril,2026-03-07
+SWC101_Overflow_6.sol,Integer Overflow,Medium,Oyente,2026-03-07
+SWC105_AccessControl_6.sol,Access Control,Low,Slither,2026-03-07
+SWC105_AccessControl_6.sol,Access Control,Medium,Mythril,2026-03-07
+SWC105_AccessControl_6.sol,Access Control,Medium,Oyente,2026-03-07
+SWC104_UncheckedCalls_6.sol,Unchecked External Calls,Medium,Slither,2026-03-07
+SWC104_UncheckedCalls_6.sol,Unchecked External Calls,Critical,Mythril,2026-03-07
+SWC104_UncheckedCalls_6.sol,Unchecked External Calls,Low,Oyente,2026-03-07
+SWC113_DOSLoop_6.sol,Denial of Service (Loop),Low,Slither,2026-03-07
+SWC113_DOSLoop_6.sol,Denial of Service (Loop),High,Mythril,2026-03-07
+SWC113_DOSLoop_6.sol,Denial of Service (Loop),Critical,Oyente,2026-03-07
+SWC113_DOSGas_6.sol,Denial of Service (Gas),High,Slither,2026-03-07
+SWC113_DOSGas_6.sol,Denial of Service (Gas),Medium,Mythril,2026-03-07
+SWC113_DOSGas_6.sol,Denial of Service (Gas),Low,Oyente,2026-03-07
+FR_Ordering_6.sol,Front Running,Critical,Slither,2026-03-07
+FR_Ordering_6.sol,Front Running,Medium,Mythril,2026-03-07
+FR_Ordering_6.sol,Front Running,Low,Oyente,2026-03-07
+SWC116_Timestamp_6.sol,Timestamp Dependence,Low,Slither,2026-03-07
