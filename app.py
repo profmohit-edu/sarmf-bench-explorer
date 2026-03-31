@@ -25,6 +25,9 @@ st.markdown("""
 Assistant Professor, Department of Computer Science and Engineering  
 Bharati Vidyapeeth's College of Engineering (BVCOE, Delhi)  
 
+Cite as:
+M. Tiwari, “SARMF-Bench Explorer v1.0 – AI-Assisted Smart Contract Vulnerability Benchmarking System”. Zenodo, Mar. 31, 2026. doi: 10.5281/zenodo.19354672.
+
 This system is powered by SARMF-Bench, a smart contract vulnerability benchmark that I independently designed, implemented, and maintain from my home research lab aligned with the Department of Computer Science and Engineering at BVCOE, Delhi.  
 
 The dataset and framework are archived across multiple international repositories with DOI-backed accessibility:
@@ -285,6 +288,3 @@ with data_tab:
         "built to showcase a DOI-backed smart contract vulnerability benchmark curated "
         "at the Department of Computer Science and Engineering, BVCOE, Delhi."
     )
-
-Cite as:
-M. Tiwari, “SARMF-Bench Explorer v1.0 – AI-Assisted Smart Contract Vulnerability Benchmarking System”. Zenodo, Mar. 31, 2026. doi: 10.5281/zenodo.19354672.
