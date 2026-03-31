@@ -1,5 +1,7 @@
 # SARMF-Bench Explorer
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://sarmfbenchexplorerbvcoend.streamlit.app/)
+
 SARMF-Bench Explorer is an interactive web application for exploring **SARMF-Bench**, a reproducible smart contract vulnerability benchmark and cross-tool evaluation framework.  
 The app provides a visual, filterable interface over a curated benchmark dataset, enabling researchers, students, and practitioners to understand vulnerability patterns and tool behaviour on Ethereum smart contracts.
 
