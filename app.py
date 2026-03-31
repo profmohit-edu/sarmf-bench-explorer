@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-# ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="SARMF-Bench Explorer", layout="wide")
 
 # ---------------- LOAD CSV ----------------
@@ -12,10 +11,17 @@ except Exception as e:
     st.write(e)
     st.stop()
 
+# ---------------- AI RISK SCORING ----------------
+severity_map = {
+    "Low": 1,
+    "Medium": 2,
+    "High": 3
+}
+
+df["Risk Score"] = df["Severity"].map(severity_map)
+
 # ---------------- SIDEBAR ----------------
 st.sidebar.title("SARMF Controls")
-
-st.sidebar.markdown("### Filter Data")
 
 vuln_filter = st.sidebar.multiselect(
     "Vulnerability",
@@ -43,7 +49,7 @@ filtered_df = df[
 
 # ---------------- HEADER ----------------
 st.title("SARMF-Bench Explorer")
-st.subheader("Smart Contract Vulnerability Benchmarking System")
+st.subheader("AI-Assisted Smart Contract Vulnerability Benchmarking System")
 
 st.write("""
 Developed by Mohit Tiwari  
@@ -53,14 +59,17 @@ Bharati Vidyapeeth's College of Engineering, New Delhi
 
 st.markdown("---")
 
-# ---------------- SYSTEM PURPOSE ----------------
-st.subheader("System Purpose")
+# ---------------- RESEARCH POSITIONING ----------------
+st.subheader("Research Context")
 
 st.write("""
-This system supports benchmarking of smart contract vulnerabilities across multiple analysis tools.
+This system demonstrates a structured benchmarking approach for analyzing smart contract vulnerabilities 
+across multiple automated analysis tools.
 
-It enables structured comparison of vulnerability types, severity levels, and tool outputs,
-forming a base for reproducible security evaluation and research.
+It incorporates a rule-based risk scoring mechanism that simulates AI-driven vulnerability prioritization, 
+enabling comparative evaluation and decision support in secure blockchain development.
+
+The framework can be extended into a full AI-based Cyber Maturity Index (CMI) model.
 """)
 
 st.markdown("---")
@@ -68,11 +77,12 @@ st.markdown("---")
 # ---------------- OVERVIEW ----------------
 st.subheader("Overview")
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Total Contracts", filtered_df["Contract"].nunique())
-col2.metric("Total Records", len(filtered_df))
-col3.metric("Unique Vulnerabilities", filtered_df["Vulnerability"].nunique())
+col1.metric("Contracts", filtered_df["Contract"].nunique())
+col2.metric("Records", len(filtered_df))
+col3.metric("Vulnerabilities", filtered_df["Vulnerability"].nunique())
+col4.metric("Avg Risk Score", round(filtered_df["Risk Score"].mean(), 2) if not filtered_df.empty else 0)
 
 st.markdown("---")
 
@@ -109,6 +119,15 @@ with col2:
 
 st.markdown("---")
 
+# ---------------- TOOL COMPARISON ----------------
+st.subheader("Tool Comparison")
+
+if not filtered_df.empty:
+    tool_compare = pd.crosstab(filtered_df["Tool"], filtered_df["Vulnerability"])
+    st.dataframe(tool_compare)
+
+st.markdown("---")
+
 # ---------------- CONTRACT INSPECTION ----------------
 st.subheader("Contract Inspection")
 
@@ -126,10 +145,11 @@ else:
     st.write("Vulnerability:", row["Vulnerability"])
     st.write("Severity:", row["Severity"])
     st.write("Tool:", row["Tool"])
+    st.write("Risk Score:", row["Risk Score"])
 
-    st.write("Recommendation: Further manual audit required.")
+    st.write("Recommendation: Prioritize based on risk score and validate manually.")
 
 st.markdown("---")
 
 # ---------------- FOOTER ----------------
-st.write("SARMF Framework | Smart Contract Security Analysis System")
+st.write("SARMF Framework | AI-Driven Smart Contract Security Analysis System")
