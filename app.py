@@ -40,7 +40,7 @@ Bharati Vidyapeeth's College of Engineering, New Delhi
 st.divider()
 
 # -------------------------------
-# DATA GENERATION (150 RECORDS)
+# DATA GENERATION
 # -------------------------------
 csv_file = "sarmf_data.csv"
 
@@ -59,22 +59,32 @@ if not os.path.exists(csv_file):
             "Vulnerability": random.choice(vulnerabilities),
             "Severity": random.choice(severities),
             "Tool": random.choice(tools),
-            "Date": (start_date + timedelta(days=i)).strftime("%Y-%m-%d"),
-            "Risk_Score": random.randint(30, 100)
+            "Date": (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
         })
 
     pd.DataFrame(rows).to_csv(csv_file, index=False)
 
-# -------------------------------
-# LOAD DATA
-# -------------------------------
 df = pd.read_csv(csv_file)
 df["Date"] = pd.to_datetime(df["Date"])
 
 # -------------------------------
-# SIDEBAR FILTERS
+# SIDEBAR (INTERACTIVE SLIDERS)
 # -------------------------------
-st.sidebar.header("Filters")
+st.sidebar.header("Controls")
+
+low_w = st.sidebar.slider("Weight: Low Severity", 0, 5, 1)
+med_w = st.sidebar.slider("Weight: Medium Severity", 0, 5, 2)
+high_w = st.sidebar.slider("Weight: High Severity", 0, 5, 3)
+crit_w = st.sidebar.slider("Weight: Critical Severity", 0, 5, 4)
+
+severity_map = {
+    "Low": low_w,
+    "Medium": med_w,
+    "High": high_w,
+    "Critical": crit_w
+}
+
+df["Risk_Score"] = df["Severity"].map(severity_map)
 
 tool_filter = st.sidebar.multiselect("Tool", df["Tool"].unique(), default=df["Tool"].unique())
 severity_filter = st.sidebar.multiselect("Severity", df["Severity"].unique(), default=df["Severity"].unique())
@@ -88,12 +98,12 @@ col1, col2, col3 = st.columns(3)
 
 col1.metric("Contracts", len(filtered_df))
 col2.metric("Average Risk Score", int(filtered_df["Risk_Score"].mean()))
-col3.metric("High Risk Cases", len(filtered_df[filtered_df["Risk_Score"] > 80]))
+col3.metric("High Risk Cases", len(filtered_df[filtered_df["Risk_Score"] >= high_w]))
 
 st.divider()
 
 # -------------------------------
-# TOP RISK CONTRACTS
+# TOP CONTRACTS
 # -------------------------------
 st.subheader("Top Risk Contracts")
 
@@ -101,7 +111,7 @@ top = filtered_df.sort_values(by="Risk_Score", ascending=False).head(10)
 st.dataframe(top, use_container_width=True)
 
 # -------------------------------
-# VISUAL ANALYTICS
+# VISUALS
 # -------------------------------
 st.subheader("Vulnerability Distribution")
 st.bar_chart(filtered_df["Vulnerability"].value_counts())
@@ -136,7 +146,7 @@ model = Pipeline([
     ("model", RandomForestClassifier())
 ])
 
-model.fit(X, y > 70)
+model.fit(X, y >= high_w)
 
 v = st.selectbox("Vulnerability", df["Vulnerability"].unique())
 s = st.selectbox("Severity", df["Severity"].unique())
@@ -171,7 +181,7 @@ def create_pdf():
 st.download_button("Download PDF", create_pdf(), "sarmf_report.pdf")
 
 # -------------------------------
-# FULL DATA
+# DATA TABLE
 # -------------------------------
 st.subheader("Dataset")
 st.dataframe(filtered_df, use_container_width=True)
