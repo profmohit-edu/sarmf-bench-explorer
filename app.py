@@ -40,7 +40,7 @@ The dataset and framework are archived across multiple international repositorie
 **Academic Profiles:**  
 - ORCID: [https://orcid.org/0000-0003-1836-3451](https://orcid.org/0000-0003-1836-3451)  
 - Google Scholar: [https://scholar.google.com/citations?user=ZFRPBBcAAAAJ&hl=en](https://scholar.google.com/citations?user=ZFRPBBcAAAAJ&hl=en)  
-- Scopus: [http://www.scopus.com/authid/detail.url?authorId=57222016881](http://www.scopus.com/authid/detail.url?authorId=57222016881)  
+- Scopus: [http://www.scopus.com/authid/detail.url?authorId=24483852000](http://www.scopus.com/authid/detail.url?authorId=24483852000)  
 - Web of Science: [https://www.webofscience.com/wos/author/record/33087873](https://www.webofscience.com/wos/author/record/33087873)  
 - Vidwan: [https://vidwan.inflibnet.ac.in/profile/293249](https://vidwan.inflibnet.ac.in/profile/293249)  
 - ResearchGate: [https://www.researchgate.net/profile/Mohit-Tiwari-6](https://www.researchgate.net/profile/Mohit-Tiwari-6)  
