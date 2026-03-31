@@ -48,7 +48,8 @@ st.subheader("Vulnerability Distribution")
 st.bar_chart(filtered_df["Vulnerability"].value_counts())
 
 st.subheader("Severity Distribution")
-st.bar_chart(filtered_df["Severity"].value_counts())import streamlit as st
+st.bar_chart(filtered_df["Severity"].value_counts())
+import streamlit as st
 import pandas as pd
 
 st.title("SARMF-Bench Explorer")
