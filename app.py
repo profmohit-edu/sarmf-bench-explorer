@@ -1,8 +1,3 @@
-Here is the **full updated, finalized `app.py`** ready to copy‑paste. It uses your expanded `sarmf_bench_real.csv` and includes the BVCOE, Delhi and home‑lab wording.
-
-This code expects `sarmf_bench_real.csv` (≈180 rows) to be in the same folder as `app.py`.
-
-```python
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -27,7 +22,7 @@ st.subheader("AI-Assisted Smart Contract Vulnerability Benchmarking System")
 
 st.markdown("""
 **Mohit Tiwari**  
-Assistant Professor, Department of Computer Science and Engineering,  
+Assistant Professor, Department of Computer Science and Engineering  
 Bharati Vidyapeeth's College of Engineering (BVCOE, Delhi)  
 
 This system is powered by SARMF-Bench, a smart contract vulnerability benchmark that I independently designed, implemented, and maintain from my home research lab aligned with the Department of Computer Science and Engineering at BVCOE, Delhi.  
@@ -290,4 +285,3 @@ with data_tab:
         "built to showcase a DOI-backed smart contract vulnerability benchmark curated "
         "at the Department of Computer Science and Engineering, BVCOE, Delhi."
     )
-```
