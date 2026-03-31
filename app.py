@@ -7,7 +7,36 @@ st.set_page_config(
     layout="wide",
 )
 
-# -------------------- LOAD DATA (CSV + FALLBACK) --------------------
+# -------------------- CLEAN STYLING --------------------
+st.markdown("""
+<style>
+.main {
+    background-color: #f7f9fc;
+}
+
+h1 {
+    color: #1f4e79;
+    font-weight: 700;
+}
+
+h2, h3 {
+    color: #2c3e50;
+}
+
+.block-container {
+    padding-top: 2rem;
+}
+
+div[data-testid="stMetric"] {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #e6e6e6;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# -------------------- LOAD DATA --------------------
 try:
     df = pd.read_csv("sarmf_dataset.csv")
 except:
@@ -30,7 +59,7 @@ Bharati Vidyapeeth's College of Engineering, New Delhi
 st.markdown("---")
 
 # -------------------- SYSTEM PURPOSE --------------------
-st.markdown("### System Purpose")
+st.subheader("System Purpose")
 
 st.write("""
 SARMF-Bench Explorer is a prototype system designed to support benchmarking of 
@@ -39,15 +68,12 @@ smart contract vulnerabilities across multiple analysis tools.
 The system enables structured comparison of vulnerability types, severity levels, 
 and tool outputs, providing a foundation for reproducible evaluation of 
 smart contract security mechanisms.
-
-This platform can be extended with large-scale datasets and integrated analysis 
-pipelines to support academic research and security validation workflows.
 """)
 
 st.markdown("---")
 
 # -------------------- FILTERS --------------------
-st.sidebar.title("Filters")
+st.sidebar.header("Filters")
 
 vuln_filter = st.sidebar.multiselect(
     "Vulnerability",
@@ -135,12 +161,16 @@ if selected_contract:
     severity_val = row["Severity"]
     tool_val = row["Tool"]
 
+    st.markdown("### Details")
     st.write(f"Contract: {row['Contract']}")
     st.write(f"Vulnerability: {vuln_val}")
     st.write(f"Severity: {severity_val}")
     st.write(f"Tool: {tool_val}")
 
-    st.write("Recommendation: Further manual audit required.")
+    st.markdown("### Interpretation")
+    st.write(
+        f"The contract shows {vuln_val} vulnerability with {severity_val} severity."
+    )
 
 st.markdown("---")
 
@@ -175,8 +205,3 @@ BVCOE, New Delhi
     )
 else:
     st.info("Select a contract first")
-
-st.markdown("---")
-
-# -------------------- ABOUT --------------------
-st.write("This system supports dataset-driven smart contract vulnerability analysis.")
