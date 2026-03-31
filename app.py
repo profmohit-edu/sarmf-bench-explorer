@@ -2,6 +2,134 @@ import streamlit as st
 import pandas as pd
 import random
 
+st.set_page_config(page_title="SARMF-Bench Explorer", layout="wide")
+
+# TITLE
+st.title("SARMF-Bench Explorer")
+st.subheader("Smart Contract Vulnerability Benchmarking System")
+
+st.write("""
+Developed by Mohit Tiwari  
+Assistant Professor, Department of Computer Science  
+Bharati Vidyapeeth's College of Engineering, New Delhi
+""")
+
+st.markdown("---")
+
+# DATA
+contracts = []
+vulnerabilities = ["Reentrancy", "Overflow", "Access Control", "Timestamp", "DoS"]
+severities = ["Low", "Medium", "High"]
+tools = ["Slither", "Mythril", "Oyente"]
+
+for i in range(100):
+    contracts.append({
+        "Contract": f"C{i}",
+        "Vulnerability": random.choice(vulnerabilities),
+        "Severity": random.choice(severities),
+        "Tool": random.choice(tools)
+    })
+
+df = pd.DataFrame(contracts)
+
+# FILTERS
+st.sidebar.title("Filters")
+
+vuln = st.sidebar.multiselect(
+    "Vulnerability",
+    df["Vulnerability"].unique(),
+    default=df["Vulnerability"].unique()
+)
+
+severity = st.sidebar.multiselect(
+    "Severity",
+    df["Severity"].unique(),
+    default=df["Severity"].unique()
+)
+
+filtered_df = df[
+    (df["Vulnerability"].isin(vuln)) &
+    (df["Severity"].isin(severity))
+]
+
+# OVERVIEW
+st.subheader("Overview")
+
+col1, col2 = st.columns(2)
+col1.metric("Total Contracts", len(filtered_df))
+col2.metric("Unique Vulnerabilities", filtered_df["Vulnerability"].nunique())
+
+st.markdown("---")
+
+# DATA TABLE
+st.subheader("Contract Data")
+st.dataframe(filtered_df, use_container_width=True)
+
+st.markdown("---")
+
+# ANALYSIS
+st.subheader("Vulnerability Distribution")
+st.bar_chart(filtered_df["Vulnerability"].value_counts())
+
+st.subheader("Severity Distribution")
+st.bar_chart(filtered_df["Severity"].value_counts())
+
+st.markdown("---")
+
+# CONTRACT INSPECTION
+st.subheader("Contract Inspection")
+
+selected_contract = st.selectbox(
+    "Select Contract",
+    filtered_df["Contract"]
+)
+
+contract_data = filtered_df[filtered_df["Contract"] == selected_contract]
+
+st.write("Details")
+st.dataframe(contract_data)
+
+vuln_val = contract_data["Vulnerability"].values[0]
+severity_val = contract_data["Severity"].values[0]
+
+st.write("Analysis Result")
+st.write(f"Detected Vulnerability: {vuln_val}")
+st.write(f"Severity Level: {severity_val}")
+
+st.write("Recommendation: Further manual audit required.")
+
+st.markdown("---")
+
+# REPORT
+st.subheader("Generate Report")
+
+report_text = f"""
+SARMF-Bench Analysis Report
+
+Contract: {selected_contract}
+Vulnerability: {vuln_val}
+Severity: {severity_val}
+
+Analysis Summary:
+The contract shows {vuln_val} vulnerability with {severity_val} severity.
+
+Recommendation:
+Further manual audit required.
+
+Developed by:
+Mohit Tiwari
+Assistant Professor, CSE
+BVCOE, New Delhi
+"""
+
+st.download_button(
+    "Download Report",
+    report_text,
+    file_name=f"{selected_contract}_report.txt"
+)import streamlit as st
+import pandas as pd
+import random
+
 # Page config
 st.set_page_config(
     page_title="SARMF-Bench Explorer",
