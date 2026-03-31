@@ -126,9 +126,7 @@ st.download_button(
     "Download Report",
     report_text,
     file_name=f"{selected_contract}_report.txt"
-)import streamlit as st
-import pandas as pd
-import random
+)
 
 # Page config
 st.set_page_config(
